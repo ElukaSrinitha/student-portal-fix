@@ -177,6 +177,7 @@ function AdminDashboard() {
       .channel("admin-student-records")
       .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, refreshStudents)
       .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, refreshStudents)
+      .on("postgres_changes", { event: "*", schema: "public", table: "progress" }, refreshStudents)
       .on("postgres_changes", { event: "*", schema: "public", table: "course_settings" }, refreshCourseRelease)
       .subscribe();
 
