@@ -25,23 +25,11 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Local admin shortcut (works without Supabase configured)
-    if (readLocalAdmin()) {
-      const fakeUser = {
-        id: "local-admin",
-        email: ADMIN_LOCAL_EMAIL,
-        user_metadata: { full_name: "Administrator" },
-      } as unknown as User;
-      setUser(fakeUser);
-      setRole("admin");
-      setLoading(false);
-      return;
-    }
-
     if (!isSupabaseConfigured) {
       setLoading(false);
       return;
     }
+
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
