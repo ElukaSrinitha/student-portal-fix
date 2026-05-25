@@ -261,7 +261,8 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_or_publishable_key`}
       return;
     }
     toast.success("Welcome back!");
-    navigate({ to: "/student" });
+    navigate({ to: parsed.data.role === "admin" ? "/admin" : "/student" });
+
   }
 
   async function handleResetRequest(e: React.FormEvent<HTMLFormElement>) {
