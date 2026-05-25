@@ -425,7 +425,6 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_or_publishable_key`}
                       name="email"
                       type="email"
                       required
-                      defaultValue={roleTab === "admin" ? ADMIN_EMAIL : ""}
                     />
                   </div>
                   <div className="space-y-2">
@@ -434,7 +433,6 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_or_publishable_key`}
                       id="li-password"
                       name="password"
                       required
-                      defaultValue={roleTab === "admin" ? ADMIN_PASSWORD : ""}
                     />
                   </div>
                   <Button type="submit" disabled={submitting} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
