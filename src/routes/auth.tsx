@@ -276,7 +276,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_or_publishable_key`}
       .eq("user_id", data.user.id)
       .maybeSingle();
     setSubmitting(false);
-    if (roleRow?.role !== parsed.data.role) {
+    if (roleRow?.role && roleRow.role !== parsed.data.role) {
       await supabase.auth.signOut();
       toast.error(`This account is not a ${parsed.data.role}.`);
       return;
