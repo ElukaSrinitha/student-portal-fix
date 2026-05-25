@@ -61,6 +61,14 @@ type ProgressRecord = {
   updated_at: string;
 };
 
+type CourseProgressDetails = {
+  completedLessonQuizzes: number;
+  completedModuleQuizzes: number;
+  totalLessonQuizzes: number;
+  totalModuleQuizzes: number;
+  completedAt: string | null;
+};
+
 type CourseRelease = {
   released_at: string | null;
   released_by: string | null;
@@ -259,6 +267,16 @@ function AdminDashboard() {
         progressRecords
           .filter((record) => record.subject === "course_completion")
           .map((record) => [record.student_id, Math.round(Number(record.score) || 0)]),
+      ),
+    [progressRecords],
+  );
+
+  const courseDetailsByStudent = useMemo(
+    () =>
+      new Map(
+        progressRecords
+          .filter((record) => record.subject === "course_completion")
+          .map((record) => [record.student_id, parseCourseProgressDetails(record.notes)]),
       ),
     [progressRecords],
   );
@@ -579,6 +597,7 @@ function AdminDashboard() {
                       <StudentTable
                         students={filteredStudents}
                         courseProgressByStudent={courseProgressByStudent}
+                        courseDetailsByStudent={courseDetailsByStudent}
                         onViewStudent={setSelectedStudent}
                         onRemoveStudent={removeStudent}
                       />
@@ -683,6 +702,11 @@ function AdminDashboard() {
             selectedStudent
               ? courseProgressByStudent.get(selectedStudent.id) || 0
               : 0
+          }
+          courseDetails={
+            selectedStudent
+              ? courseDetailsByStudent.get(selectedStudent.id) || null
+              : null
           }
           onRemoveStudent={removeStudent}
           onOpenChange={(open) => {
