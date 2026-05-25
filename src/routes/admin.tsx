@@ -748,11 +748,13 @@ function MetricCard({
 function StudentTable({
   students,
   courseProgressByStudent,
+  courseDetailsByStudent,
   onViewStudent,
   onRemoveStudent,
 }: {
   students: Student[];
   courseProgressByStudent: Map<string, number>;
+  courseDetailsByStudent: Map<string, CourseProgressDetails | null>;
   onViewStudent: (student: Student) => void;
   onRemoveStudent: (student: Student) => void;
 }) {
@@ -775,6 +777,7 @@ function StudentTable({
             {students.map((student) => {
               const profileCompletion = getProfileCompletion(student);
               const courseScore = courseProgressByStudent.get(student.id) || 0;
+              const courseDetails = courseDetailsByStudent.get(student.id) || null;
 
               return (
                 <tr key={student.id} className="transition hover:bg-muted/30">
@@ -794,9 +797,16 @@ function StudentTable({
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant={courseScore >= 100 ? "default" : "outline"}>
-                      {courseScore}%
-                    </Badge>
+                    <div className="space-y-1">
+                      <Badge variant={courseScore >= 100 ? "default" : "outline"}>
+                        {courseScore}%
+                      </Badge>
+                      <p className="text-xs text-muted-foreground">
+                        {courseDetails
+                          ? `${courseDetails.completedLessonQuizzes}/${courseDetails.totalLessonQuizzes} lessons · ${courseDetails.completedModuleQuizzes}/${courseDetails.totalModuleQuizzes} modules`
+                          : "No course activity yet"}
+                      </p>
+                    </div>
                   </td>
                   <td className="space-x-2 px-4 py-3 text-right">
                     <Button size="sm" variant="outline" onClick={() => onViewStudent(student)}>
@@ -825,11 +835,13 @@ function StudentTable({
 function StudentDetailsDialog({
   student,
   courseScore,
+  courseDetails,
   onRemoveStudent,
   onOpenChange,
 }: {
   student: Student | null;
   courseScore: number;
+  courseDetails: CourseProgressDetails | null;
   onRemoveStudent: (student: Student) => void;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -871,6 +883,24 @@ function StudentDetailsDialog({
               </div>
               <Progress value={courseScore} />
             </div>
+          </div>
+
+          <div className="grid gap-3 rounded-xl border border-border bg-background/60 p-4 text-sm sm:grid-cols-3">
+            <Info
+              icon={BookOpenCheck}
+              label="Lessons Complete"
+              value={courseDetails ? `${courseDetails.completedLessonQuizzes}/${courseDetails.totalLessonQuizzes}` : "0/274"}
+            />
+            <Info
+              icon={Layers3}
+              label="Modules Complete"
+              value={courseDetails ? `${courseDetails.completedModuleQuizzes}/${courseDetails.totalModuleQuizzes}` : "0/45"}
+            />
+            <Info
+              icon={Award}
+              label="Completed At"
+              value={courseDetails?.completedAt ? new Date(courseDetails.completedAt).toLocaleString() : null}
+            />
           </div>
 
           <div className="flex flex-wrap gap-2">
