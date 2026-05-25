@@ -971,6 +971,23 @@ function getProfileCompletion(student: Student) {
   return Math.round((filled / fields.length) * 100);
 }
 
+function parseCourseProgressDetails(notes: string | null): CourseProgressDetails | null {
+  if (!notes) return null;
+
+  try {
+    const parsed = JSON.parse(notes) as Partial<CourseProgressDetails>;
+    return {
+      completedLessonQuizzes: Number(parsed.completedLessonQuizzes) || 0,
+      completedModuleQuizzes: Number(parsed.completedModuleQuizzes) || 0,
+      totalLessonQuizzes: Number(parsed.totalLessonQuizzes) || 274,
+      totalModuleQuizzes: Number(parsed.totalModuleQuizzes) || 45,
+      completedAt: parsed.completedAt || null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function EmptyState({
   icon: Icon,
   title,
